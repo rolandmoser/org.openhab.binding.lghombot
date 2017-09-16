@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="lghombot"
+						  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+						  xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+						  xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+
+	<thing-type id="lghombot">
+		<label>LG Hombot</label>
+		<description>LG Hombot connected through WLAN</description>
+
+		<channels>
+		    <!-- read/write information -->
+            <channel id="name" typeId="name"/>
+            <channel id="command" typeId="command"/>
+            <channel id="clean-mode" typeId="clean-mode"/>
+            <channel id="voice" typeId="voice"/>
+            <channel id="repeat" typeId="repeat"/>
+            <channel id="turbo" typeId="turbo"/>
+
+            <!-- read only information -->
+            <channel id="state" typeId="state"/>
+            <channel id="battery-level" typeId="system.battery-level"/>
+            <channel id="current-bumping" typeId="current-bumping"/>
+            <channel id="last-cleaning" typeId="last-cleaning"/>
+            <channel id="cpu-idle" typeId="cpu-idle"/>
+            <channel id="cpu-user" typeId="cpu-user"/>
+            <channel id="cpu-sys" typeId="cpu-sys"/>
+            <channel id="cpu-nice" typeId="cpu-nice"/>
+            <channel id="sumcmd" typeId="sumcmd"/>
+            <channel id="sumcmdsec" typeId="sumcmdsec"/>
+            <channel id="numhttp" typeId="numhttp"/>
+            <channel id="memusage" typeId="memusage"/>
+		</channels>
+		
+		<properties>
+            <property name="vendor">LG</property>
+            <property name="modelId">Hombot</property>
+            <property name="version"></property>
+            <property name="programVersion"></property>
+        </properties>
+		
+		<config-description>
+            <parameter name="address" type="text">
+                <label>Hostname</label>
+                <description>Provide the hostname of the Hombot</description>
+                <required>true</required>
+            </parameter>
+            
+            <parameter name="refresh" type="integer" required="true" min="5" max="65335">
+                <label>Refresh interval</label>
+                <description>Specifies the refresh interval in seconds.</description>
+                <required>true</required>
+                <default>10</default>
+            </parameter>
+            
+        </config-description>
+	</thing-type>
+
+	<channel-type id="name">
+		<item-type>String</item-type>
+		<label>Name</label>
+		<description>Name of LG Hombot</description>
+	</channel-type>
+
+    <channel-type id="command">
+        <item-type>trigger</item-type>
+        <label>Command</label>
+        <description>Command to start, pause and stop cleaning</description>
+        <event>
+            <options>
+                <option value="CLEAN_START">CLEAN_START</option>
+                <option value="HOMING">HOMING</option>
+                <option value="PAUSE">PAUSE</option>
+            </options>
+        </event>
+    </channel-type>
+
+    <!--channel-type id="command">
+        <item-type>String</item-type>
+        <label>Command</label>
+        <description>Command to start, pause and stop cleaning</description>
+        <state>
+            <options>
+                <option value="CLEAN_START">CLEAN_START</option>
+                <option value="HOMING">HOMING</option>
+                <option value="PAUSE">PAUSE</option>
+            </options>
+        </state>
+    </channel-type-->
+
+    <channel-type id="clean-mode">
+        <item-type>String</item-type>
+        <label>Clean Mode</label>
+        <description>Clean Mode, Spot, Cell-by-Cell or Zig-Zag</description>
+        <state>
+            <options>
+                <option value="SPOT">SPOT</option>
+                <option value="SB">SB</option>
+                <option value="ZZ">ZZ</option>
+            </options>
+        </state>
+    </channel-type>
+
+    <channel-type id="voice">
+        <item-type>String</item-type>
+        <label>Voice</label>
+        <description>Voice of speach output, MALE or FEMALE</description>
+        <state>
+            <options>
+                <option value="MALE">MALE</option>
+                <option value="FEMALE">FEMALE</option>
+            </options>
+        </state>
+    </channel-type>
+
+    <channel-type id="repeat">
+        <item-type>Switch</item-type>
+        <label>Repeat</label>
+        <description>Repeated cleaning on/off</description>
+    </channel-type>
+    
+    <channel-type id="turbo">
+        <item-type>Switch</item-type>
+        <label>Turbo</label>
+        <description>Turbo-Mode on/off</description>
+    </channel-type>
+    
+    <channel-type id="state">
+        <item-type>String</item-type>
+        <label>Robot State</label>
+        <description>Current state of the LG Hombot</description>
+        <state readOnly="true" pattern="%s">
+            <options>
+                <option value="CHARGING">CHARGING</option>
+                <option value="STANDBY">STANDBY</option>
+                <option value="PAUSE">PAUSE</option>
+                <option value="HOMING">HOMING</option>
+                <option value="WORKING">WORKING</option>
+                <option value="RECOVERY_WORKING">RECOVERY_WORKING</option>
+                <option value="DOCKING">DOCKING</option>
+                <option value="BACKMOVING_JOY">BACKMOVING_JOY</option>
+                <option value="BACKMOVING_INIT">BACKMOVING_INIT</option>
+            </options>
+        </state>
+    </channel-type>
+    
+    <channel-type id="current-bumping">
+        <item-type>Number</item-type>
+        <label>Current Bumping</label>
+        <description>Number of times Hombot bumped into an object</description>
+        <state readOnly="true" min="0"></state>
+    </channel-type>
+
+    <channel-type id="last-cleaning">
+        <item-type>DateTime</item-type>
+        <label>Last Cleaning</label>
+        <description>Last date and time of cleaning</description>
+        <state readOnly="true" pattern="%1$td.%1$tm.%1$tY %1$tH:%1$tM:%1$tS"></state>
+    </channel-type>
+
+    <channel-type id="cpu-idle">
+        <item-type>Number</item-type>
+        <label>Idle CPU Usage</label>
+        <description>Idle CPU Usage in percent, 0 to 100</description>
+        <state min="0" max="100" pattern="%.2f %%"></state>
+    </channel-type>
+ 
+    <channel-type id="cpu-user">
+        <item-type>Number</item-type>
+        <label>User CPU Usage</label>
+        <description>User CPU Usage in percent, 0 to 100</description>
+        <state min="0" max="100" pattern="%.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="cpu-nice">
+        <item-type>Number</item-type>
+        <label>Nice CPU Usage</label>
+        <description>Nice CPU Usage in percent, 0 to 100</description>
+        <state min="0" max="100" pattern="%.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="cpu-sys">
+        <item-type>Number</item-type>
+        <label>System CPU Usage</label>
+        <description>System CPU Usage in percent, 0 to 100</description>
+        <state min="0" max="100" pattern="%.2f %%"></state>
+    </channel-type>
+
+    <channel-type id="sumcmd">
+        <item-type>Number</item-type>
+        <label>Client commands</label>
+        <description>Number of client commands</description>
+        <state min="0" pattern="%d"></state>
+    </channel-type>
+
+    <channel-type id="sumcmdsec">
+        <item-type>Number</item-type>
+        <label>Client Commands Per Second</label>
+        <description>Number of client commands per second</description>
+        <state min="0" pattern="%.2f"></state>
+    </channel-type>
+
+    <channel-type id="numhttp">
+        <item-type>Number</item-type>
+        <label>HTTP Requests</label>
+        <description>Number of HTTP Requests</description>
+        <state min="0" pattern="%d"></state>
+    </channel-type>
+
+    <channel-type id="memusage">
+        <item-type>Number</item-type>
+        <label>Memory Usage</label>
+        <description>Memory Usage in bytes</description>
+        <state min="0" pattern="%d B"></state>
+    </channel-type>
+    
+</thing:thing-descriptions>
